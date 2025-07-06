@@ -1,0 +1,55 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Biome Lint
+        run: pnpm run lint
+
+      - name: Run Vitest Unit Tests
+        run: pnpm run test
+
+      - name: Build Frontend
+        run: pnpm run build
