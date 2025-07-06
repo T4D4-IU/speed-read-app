@@ -11,6 +11,9 @@
       ],
       "init-backend": [
         "cd backend && deno init"
+      ],
+      "check-backend": [
+        "cd backend && deno check main.ts"
       ]
     }
   }

@@ -114,3 +114,56 @@
 
    5. デプロイ準備: (変更なし)
        * ビルドプロセスの最適化。
+
+
+## 進捗
+これで、初期セットアップとCI/CDの準備が整いました。
+
+
+  次に、アプリケーションの機能実装に移ります。
+  まずは、Webページからの本文抽出機能から着手します。
+
+
+  バックエンド (backend/main.ts)
+  に、URLを受け取り、Webページから本文を抽出するエンドポイントを作成します。
+  Webスクレイピングには、Denoで利用可能な deno-dom や linkedom
+  などのライブラリが考えられますが、今回は標準の fetch
+  と正規表現、または簡単なDOMパースで本文を抽出することを検討します。
+
+
+  まず、backend/main.ts に新しいエンドポイントを追加します。
+
+ ╭──────────────────────────────╮
+ │ ✔  ReadFile backend/main.ts  │
+ ╰──────────────────────────────╯
+✦ backend/main.ts の内容を確認しました。
+
+
+  Webページからの本文抽出エンドポイントを追加します。
+  今回は、jsdom のDeno版である deno-dom を使用してHTMLをパースし、本文を抽出します。
+
+
+  まず、backend/deno.json に deno-dom の依存関係を追加します。
+
+ ╭────────────────────────────────╮
+ │ ✔  ReadFile backend/deno.json  │
+ ╰────────────────────────────────╯
+✦ backend/deno.json の内容を確認しました。
+
+
+  imports セクションに deno-dom の依存関係を追加します。
+
+
+
+    1 {
+    2   "tasks": {
+    3     "dev": "deno run --watch main.ts"
+    4   },
+    5   "imports": {
+    6     "@std/assert": "jsr:@std/assert@1",
+    7     "hono/": "jsr:@hono/hono@4.5.0/",
+    8     "deno_dom/": "https://deno.land/x/deno_dom@v0.1.45-alpha/"
+    9   }
+   10 }
+
+  上記の変更を backend/deno.json に適用します。
