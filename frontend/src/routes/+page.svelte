@@ -31,6 +31,18 @@
       isLoading = false;
     }
   }
+
+  async function pasteFromClipboard() {
+    error = null;
+    extractedText = '';
+    try {
+      const text = await navigator.clipboard.readText();
+      extractedText = text;
+    } catch (e: any) {
+      error = 'クリップボードからの貼り付けに失敗しました。ブラウザのセキュリティ設定を確認してください。';
+      console.error('Failed to read clipboard contents: ', e);
+    }
+  }
 </script>
 
 <svelte:head>
@@ -45,6 +57,12 @@
     <input type="url" bind:value={url} placeholder="WebページのURLを入力" />
     <button on:click={extractText} disabled={isLoading}>
       {isLoading ? '抽出中...' : 'テキストを抽出'}
+    </button>
+  </div>
+
+  <div class="clipboard-section">
+    <button on:click={pasteFromClipboard}>
+      クリップボードから貼り付け
     </button>
   </div>
 
@@ -75,7 +93,7 @@
     color: #333;
   }
 
-  .input-section {
+  .input-section, .clipboard-section {
     display: flex;
     width: 100%;
     margin-bottom: 20px;
