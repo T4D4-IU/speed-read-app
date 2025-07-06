@@ -11,7 +11,9 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
-		"test": "npm run test:unit -- --run"
+		"test": "pnpm run test:unit -- --run",
+		"lint": "biome check --apply-unsafe .",
+		"format": "biome format --write ."
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.2.6",
