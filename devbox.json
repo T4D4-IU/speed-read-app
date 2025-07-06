@@ -19,7 +19,13 @@
         "cd backend && deno check main.ts"
       ],
       "start-backend": [
-        "cd backend && deno run --allow-net --allow-read main.ts"
+        "cd backend && deno run --allow-net --allow-read --allow-import main.ts"
+      ],
+      "start-frontend": [
+        "cd frontend && pnpm dev"
+      ],
+      "check-frontend": [
+        "cd frontend && pnpm run check"
       ]
     }
   }

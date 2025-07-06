@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment'; // 追加
 
   let url: string = '';
   let extractedText: string = '';
@@ -20,7 +21,7 @@
   let fontColor: string = '#333';
   let backgroundColor: string = '#f9f9f9';
   let theme: 'light' | 'dark' | 'sepia' = 'light';
-  let displayPosition: 'center' | 'top' | 'bottom' = 'center';
+  
 
   // Themes definition
   const themes = {
@@ -75,8 +76,12 @@
     resetReading(); // Reset reading state
 
     try {
-      const text = await navigator.clipboard.readText();
-      extractedText = text;
+      if (browser) { // 追加
+        const text = await navigator.clipboard.readText();
+        extractedText = text;
+      } else { // 追加
+        error = 'クリップボードからの貼り付けはブラウザ環境でのみ利用可能です。'; // 追加
+      } // 追加
     } catch (e: any) {
       error = 'クリップボードからの貼り付けに失敗しました。ブラウザのセキュリティ設定を確認してください。';
       console.error('Failed to read clipboard contents: ', e);
@@ -163,37 +168,41 @@
   }
 
   function saveSettings() {
-    const settings = {
-      wpm,
-      fontFamily,
-      fontSize,
-      fontWeight,
-      fontColor,
-      backgroundColor,
-      theme,
-      displayPosition
-    };
-    localStorage.setItem('speedReadSettings', JSON.stringify(settings));
+    if (browser) { // 追加
+      const settings = {
+        wpm,
+        fontFamily,
+        fontSize,
+        fontWeight,
+        fontColor,
+        backgroundColor,
+        theme
+      };
+      localStorage.setItem('speedReadSettings', JSON.stringify(settings));
+    } // 追加
   }
 
   function loadSettings() {
-    const savedSettings = localStorage.getItem('speedReadSettings');
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
-      wpm = settings.wpm || wpm;
-      fontFamily = settings.fontFamily || fontFamily;
-      fontSize = settings.fontSize || fontSize;
-      fontWeight = settings.fontWeight || fontWeight;
-      fontColor = settings.fontColor || fontColor;
-      backgroundColor = settings.backgroundColor || backgroundColor;
-      theme = settings.theme || theme;
-      displayPosition = settings.displayPosition || displayPosition;
-    }
+    if (browser) { // 追加
+      const savedSettings = localStorage.getItem('speedReadSettings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        wpm = settings.wpm || wpm;
+        fontFamily = settings.fontFamily || fontFamily;
+        fontSize = settings.fontSize || fontSize;
+        fontWeight = settings.fontWeight || fontWeight;
+        fontColor = settings.fontColor || fontColor;
+        backgroundColor = settings.backgroundColor || backgroundColor;
+        theme = settings.theme || theme;
+      }
+    } // 追加
   }
 
   // Load settings on component mount
   onMount(() => {
-    loadSettings();
+    if (browser) { // 追加
+      loadSettings();
+    } // 追加
   });
 
   // React to WPM changes
@@ -209,7 +218,9 @@
   }
 
   // Save settings when any relevant state changes
-  $: wpm, fontFamily, fontSize, fontWeight, fontColor, backgroundColor, theme, displayPosition, saveSettings();
+  $: if (browser) { // 修正
+    wpm, fontFamily, fontSize, fontWeight, fontColor, backgroundColor, theme, saveSettings(); // displayPositionを削除
+  } // 修正
 </script>
 
 <svelte:head>
@@ -298,12 +309,7 @@
         </select>
       </div>
 
-      <div class="setting-group">
-        <label>表示位置:</label>
-        <label><input type="radio" name="display-position" value="top" bind:group={displayPosition}> 上</label>
-        <label><input type="radio" name="display-position" value="center" bind:group={displayPosition}> 中央</label>
-        <label><input type="radio" name="display-position" value="bottom" bind:group={displayPosition}> 下</label>
-      </div>
+      
 
       <div class="playback-buttons">
         <button on:click={prevWord} disabled={currentWordIndex === 0}>戻る</button>
@@ -315,7 +321,7 @@
       </div>
     </div>
 
-    <div class="reading-display" style="background-color: {backgroundColor}; justify-content: {displayPosition === 'top' ? 'flex-start' : displayPosition === 'bottom' ? 'flex-end' : 'center'};">
+    <div class="reading-display" style="background-color: {backgroundColor}; justify-content: center;"> <!-- justify-contentを常にcenterに固定 -->
       <p class="current-word" style="font-family: {fontFamily}; font-size: {fontSize}px; font-weight: {fontWeight}; color: {fontColor};">
         {readingTextTokens[currentWordIndex] || ''}
       </p>

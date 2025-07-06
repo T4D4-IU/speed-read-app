@@ -1,8 +1,12 @@
 import { Hono, Context } from 'hono/'
-// import { DOMParser } from 'https://esm.sh/linkedom@0.16.1/esm/index.js' // 削除
-import loadSudachi from 'npm:@hiogawa/sudachi.wasm' // 修正
+import { cors } from 'hono/cors' // 修正
+import * as kuromoji from 'https://code4fukui.github.io/kuromoji-es/kuromoji.js' // 修正
+
+// console.log('kuromoji object:', kuromoji); // 削除
 
 const app = new Hono()
+
+app.use('*', cors()) // 全てのルートでCORSを有効にする
 
 app.get('/', (c: Context) => {
   return c.text('Hello Hono!')
@@ -35,6 +39,8 @@ app.post('/extract-text', async (c: Context) => {
   }
 })
 
+let kuromojiTokenizer: any | null = null; // kuromojiのTokenizerインスタンスを保持する変数
+
 app.post('/tokenize', async (c: Context) => {
   const { text } = await c.req.json()
   if (!text) {
@@ -42,10 +48,13 @@ app.post('/tokenize', async (c: Context) => {
   }
 
   try {
-    const sudachi = await loadSudachi() // loadSudachi関数を呼び出す
+    if (!kuromojiTokenizer) {
+      // kuromojiの辞書ファイルをロード
+      kuromojiTokenizer = await kuromoji.kuromoji.createTokenizer(); // createTokenizerを使用
+    }
 
-    const tokens = sudachi.tokenize(text) // インスタンスメソッドを呼び出し
-    return c.json({ tokens: tokens.map(token => token.surface) })
+    const tokens = kuromojiTokenizer.tokenize(text);
+    return c.json({ tokens: tokens.map(token => token.surface_form) }) // kuromojiのトークン形式に合わせて修正
   } catch (error) {
     if (error instanceof Error) {
       return c.json({ error: `Internal server error: ${error.message}` }, 500)
