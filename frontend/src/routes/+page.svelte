@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   let url: string = '';
   let extractedText: string = '';
   let isLoading: boolean = false;
@@ -10,6 +12,31 @@
   let currentWordIndex: number = 0;
   let isPlaying: boolean = false;
   let intervalId: number | undefined;
+
+  // New state for customization
+  let fontFamily: string = 'sans-serif';
+  let fontSize: number = 48; // px
+  let fontWeight: string = 'normal';
+  let fontColor: string = '#333';
+  let backgroundColor: string = '#f9f9f9';
+  let theme: 'light' | 'dark' | 'sepia' = 'light';
+  let displayPosition: 'center' | 'top' | 'bottom' = 'center';
+
+  // Themes definition
+  const themes = {
+    light: {
+      font: '#333',
+      background: '#f9f9f9'
+    },
+    dark: {
+      font: '#eee',
+      background: '#333'
+    },
+    sepia: {
+      font: '#5b4636',
+      background: '#f4e8d9'
+    }
+  };
 
   async function extractText() {
     isLoading = true;
@@ -135,11 +162,54 @@
     isPlaying = false;
   }
 
+  function saveSettings() {
+    const settings = {
+      wpm,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      fontColor,
+      backgroundColor,
+      theme,
+      displayPosition
+    };
+    localStorage.setItem('speedReadSettings', JSON.stringify(settings));
+  }
+
+  function loadSettings() {
+    const savedSettings = localStorage.getItem('speedReadSettings');
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings);
+      wpm = settings.wpm || wpm;
+      fontFamily = settings.fontFamily || fontFamily;
+      fontSize = settings.fontSize || fontSize;
+      fontWeight = settings.fontWeight || fontWeight;
+      fontColor = settings.fontColor || fontColor;
+      backgroundColor = settings.backgroundColor || backgroundColor;
+      theme = settings.theme || theme;
+      displayPosition = settings.displayPosition || displayPosition;
+    }
+  }
+
+  // Load settings on component mount
+  onMount(() => {
+    loadSettings();
+  });
+
   // React to WPM changes
   $: if (isPlaying && intervalId !== undefined) {
     pauseReading();
     startReading();
   }
+
+  // Apply theme colors
+  $: {
+    fontColor = themes[theme].font;
+    backgroundColor = themes[theme].background;
+  }
+
+  // Save settings when any relevant state changes
+  $: wpm, fontFamily, fontSize, fontWeight, fontColor, backgroundColor, theme, displayPosition, saveSettings();
 </script>
 
 <svelte:head>
@@ -190,6 +260,51 @@
         step="10"
         bind:value={wpm}
       />
+
+      <div class="setting-group">
+        <label for="font-family">フォント:</label>
+        <select id="font-family" bind:value={fontFamily}>
+          <option value="sans-serif">Sans-serif</option>
+          <option value="serif">Serif</option>
+          <option value="monospace">Monospace</option>
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Meiryo">Meiryo</option>
+          <option value="Yu Gothic">Yu Gothic</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="font-size">サイズ:</label>
+        <input type="range" id="font-size" min="20" max="80" step="2" bind:value={fontSize} />
+        <span>{fontSize}px</span>
+      </div>
+
+      <div class="setting-group">
+        <label for="font-weight">太さ:</label>
+        <select id="font-weight" bind:value={fontWeight}>
+          <option value="normal">標準</option>
+          <option value="bold">太字</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="theme-select">テーマ:</label>
+        <select id="theme-select" bind:value={theme}>
+          <option value="light">ライト</option>
+          <option value="dark">ダーク</option>
+          <option value="sepia">セピア</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label>表示位置:</label>
+        <label><input type="radio" name="display-position" value="top" bind:group={displayPosition}> 上</label>
+        <label><input type="radio" name="display-position" value="center" bind:group={displayPosition}> 中央</label>
+        <label><input type="radio" name="display-position" value="bottom" bind:group={displayPosition}> 下</label>
+      </div>
+
       <div class="playback-buttons">
         <button on:click={prevWord} disabled={currentWordIndex === 0}>戻る</button>
         <button on:click={isPlaying ? pauseReading : startReading}>
@@ -200,8 +315,8 @@
       </div>
     </div>
 
-    <div class="reading-display">
-      <p class="current-word">
+    <div class="reading-display" style="background-color: {backgroundColor}; justify-content: {displayPosition === 'top' ? 'flex-start' : displayPosition === 'bottom' ? 'flex-end' : 'center'};">
+      <p class="current-word" style="font-family: {fontFamily}; font-size: {fontSize}px; font-weight: {fontWeight}; color: {fontColor};">
         {readingTextTokens[currentWordIndex] || ''}
       </p>
     </div>
@@ -346,5 +461,17 @@
     color: #007bff;
     text-align: center;
     word-break: break-all; /* Handle long words */
+  }
+
+  .setting-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .setting-group input[type="range"] {
+    flex-grow: 1;
   }
 </style>
