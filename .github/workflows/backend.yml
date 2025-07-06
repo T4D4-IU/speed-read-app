@@ -1,0 +1,36 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Devbox
+        uses: jetify-com/devbox-action@v0.1.0
+
+      - name: Run Deno Lint
+        run: devbox run deno lint
+
+      - name: Run Deno Tests
+        run: devbox run deno test
+
+      - name: Run Deno Check
+        run: devbox run deno check main.ts
