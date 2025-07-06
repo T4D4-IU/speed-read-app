@@ -17,6 +17,9 @@
       ],
       "check-backend": [
         "cd backend && deno check main.ts"
+      ],
+      "start-backend": [
+        "cd backend && deno run --allow-net --allow-read main.ts"
       ]
     }
   }

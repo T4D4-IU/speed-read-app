@@ -4,7 +4,6 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "hono/": "jsr:@hono/hono@4.5.0/",
-    "sudachi-wasm/": "https://esm.sh/sudachi-wasm@1.0.0/" // 仮のバージョン
+    "hono/": "jsr:@hono/hono@4.5.0/"
   }
 }

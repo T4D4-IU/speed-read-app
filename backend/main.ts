@@ -1,6 +1,6 @@
-import { Hono, Context } from 'hono' // Contextを追加
-import { DOMParser } from 'https://deno.land/x/deno_dom/deno-dom-wasm.ts'
-import { SudachiAnalyzer } from 'sudachi-wasm'
+import { Hono, Context } from 'hono/'
+// import { DOMParser } from 'https://esm.sh/linkedom@0.16.1/esm/index.js' // 削除
+import loadSudachi from 'npm:@hiogawa/sudachi.wasm' // 修正
 
 const app = new Hono()
 
@@ -21,15 +21,10 @@ app.post('/extract-text', async (c: Context) => {
     }
     const html = await response.text()
 
-    const parser = new DOMParser()
-    const document = parser.parseFromString(html, 'text/html')
-
-    const articleElement = document?.querySelector('article') || document?.querySelector('main') || document?.body
-    const textContent = articleElement?.textContent || ''
-
-    const cleanText = textContent.replace(/<script\b[^<]*(?:(?!<\/script>)[^<]*)*<\/script>/gi, '')
-                                 .replace(/<style\b[^<]*(?:(?!<\/style>)[^<]*)*<\/style>/gi, '')
-                                 .replace(/\s+/g, ' ').trim()
+    let cleanText = html.replace(/<script\b[^<]*(?:(?!<\/script>)[^<]*)*<\/script>/gi, '')
+                        .replace(/<style\b[^<]*(?:(?!<\/style>)[^<]*)*<\/style>/gi, '')
+                        .replace(/<[^>]*>/g, '')
+                        .replace(/\s+/g, ' ').trim()
 
     return c.json({ text: cleanText })
   } catch (error) {
@@ -47,13 +42,10 @@ app.post('/tokenize', async (c: Context) => {
   }
 
   try {
-    const analyzer = new SudachiAnalyzer()
+    const sudachi = await loadSudachi() // loadSudachi関数を呼び出す
 
-    const jsonString = await analyzer.tokenize(text) // JSON文字列が返される
-    const tokens = JSON.parse(jsonString) // JSONをパース
-
-    // tokensの型が不明なため、any[]として扱うか、SudachiAnalyzerのドキュメントで型を確認
-    return c.json({ tokens: (tokens as any[]).map(token => token.surface) })
+    const tokens = sudachi.tokenize(text) // インスタンスメソッドを呼び出し
+    return c.json({ tokens: tokens.map(token => token.surface) })
   } catch (error) {
     if (error instanceof Error) {
       return c.json({ error: `Internal server error: ${error.message}` }, 500)
