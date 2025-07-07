@@ -1,6 +1,54 @@
 {
   "lockfile_version": "1",
   "packages": {
+    "cloudflare-cli@latest": {
+      "last_modified": "2025-06-20T02:24:11Z",
+      "resolved": "github:NixOS/nixpkgs/076e8c6678d8c54204abcb4b1b14c366835a58bb#cloudflare-cli",
+      "source": "devbox-search",
+      "version": "4.2.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jk0wwicgiqs4rsqd6fadspcvjp63s8n9-cloudflare-cli-4.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/jk0wwicgiqs4rsqd6fadspcvjp63s8n9-cloudflare-cli-4.2.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gppg055d8s181c8k1jcjc3ddzas3sff2-cloudflare-cli-4.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/gppg055d8s181c8k1jcjc3ddzas3sff2-cloudflare-cli-4.2.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6xxs5aajr3b3cm7fh3s4c66f2wy42k03-cloudflare-cli-4.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6xxs5aajr3b3cm7fh3s4c66f2wy42k03-cloudflare-cli-4.2.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/w24rad0pir2xzb1h9p5yv2wa4yzrjxrm-cloudflare-cli-4.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/w24rad0pir2xzb1h9p5yv2wa4yzrjxrm-cloudflare-cli-4.2.0"
+        }
+      }
+    },
     "deno@latest": {
       "last_modified": "2025-06-25T15:38:15Z",
       "resolved": "github:NixOS/nixpkgs/61c0f513911459945e2cb8bf333dc849f1b976ff#deno",
