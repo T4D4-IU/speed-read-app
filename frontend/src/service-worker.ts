@@ -2,6 +2,7 @@
 /// <reference no-default-lib="true"/>
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
+declare const self: ServiceWorkerGlobalScope;
 
 import { build, files, version } from '$service-worker';
 
@@ -58,20 +59,31 @@ self.addEventListener('fetch', (event: FetchEvent) => {
 	const is_asset = static_assets.has(url.pathname);
 
 	if (is_asset) {
-		event.respondWith(caches.match(event.request));
-	} else {
 		event.respondWith(
-			caches
-				.open(ASSETS)
-				.then(async (cache) => {
-					try {
-						const response = await fetch(event.request);
-						cache.put(event.request, response.clone());
-						return response;
-					} catch (err) {
-						return cache.match(event.request);
-					}
-				})
+			caches.match(event.request).then((cachedResponse) => {
+				if (cachedResponse) {
+					return cachedResponse;
+				}
+				// If not in cache, fetch from network
+				return fetch(event.request);
+			})
 		);
+	} else {
+			event.respondWith(
+				caches
+					.open(ASSETS)
+					.then(async (cache) => {
+						try {
+							const response = await fetch(event.request);
+							cache.put(event.request, response.clone());
+							return response;
+						} catch (err) {
+							return cache.match(event.request).then((cachedResponse) => {
+								// If network fails, return cached response if available
+								return cachedResponse || new Response('Network error', { status: 503 });
+							});
+						}
+					})
+			);
 	}
 });
