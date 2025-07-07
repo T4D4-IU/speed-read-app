@@ -1,5 +1,5 @@
 # Use an official Deno runtime as a parent image
-FROM denoland/deno:1.44.4
+FROM denoland/deno:latest
 
 # Set the working directory in the container
 WORKDIR /app
