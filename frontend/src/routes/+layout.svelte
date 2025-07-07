@@ -1,12 +1,10 @@
 <script lang="ts">
-	import Header from './Header.svelte';
 	import '../app.css';
 
 	let { children } = $props();
 </script>
 
 <div class="app">
-	<Header />
 
 	<main>
 		{@render children()}
@@ -14,7 +12,8 @@
 
 	<footer>
 		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
+			Created by <a href="https://github.com/T4D4-IU">T4D4</a>
+			Code is <a href="https://github.com/T4D4-IU/speed-read-app">here!</a>
 		</p>
 	</footer>
 </div>
