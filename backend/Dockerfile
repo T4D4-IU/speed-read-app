@@ -14,4 +14,4 @@ EXPOSE 8000
 # Command to run the Deno application
 # --allow-net is needed for network access
 # --allow-read is needed to read files (e.g., main.ts)
-CMD ["deno", "run", "--allow-net", "--allow-read", "main.ts"]
+CMD ["deno", "run", "--allow-net", "--allow-read", "--allow-import", "main.ts"]
