@@ -6,7 +6,14 @@ import * as kuromoji from 'https://code4fukui.github.io/kuromoji-es/kuromoji.js'
 
 const app = new Hono()
 
-app.use('*', cors()) // 全てのルートでCORSを有効にする
+app.use(
+  '*',
+  cors({
+    origin: '*', // Allow all origins
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow common methods
+    allowHeaders: ['Content-Type', 'Authorization'], // Explicitly allow common headers
+  })
+)
 
 app.get('/', (c: Context) => {
   return c.text('Hello Hono!')
