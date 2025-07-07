@@ -132,6 +132,54 @@
           "store_path": "/nix/store/3rvn3p974bi9llyfr1sjrg02911l52b7-imagemagick-7.1.1-47"
         }
       }
+    },
+    "typescript@latest": {
+      "last_modified": "2025-06-20T02:24:11Z",
+      "resolved": "github:NixOS/nixpkgs/076e8c6678d8c54204abcb4b1b14c366835a58bb#typescript",
+      "source": "devbox-search",
+      "version": "5.8.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bzcr2mprhck3nbyw82rywdh785di9v3c-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bzcr2mprhck3nbyw82rywdh785di9v3c-typescript-5.8.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/88n44yvzpcpixj0mr7b87x58r495ib9z-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/88n44yvzpcpixj0mr7b87x58r495ib9z-typescript-5.8.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/aqrzjp05fncc3zxwpiq9gvcawadjrqzc-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/aqrzjp05fncc3zxwpiq9gvcawadjrqzc-typescript-5.8.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/hl69bzlr5ijvsvjcc1z24qrkxs4xdlyp-typescript-5.8.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/hl69bzlr5ijvsvjcc1z24qrkxs4xdlyp-typescript-5.8.3"
+        }
+      }
     }
   }
 }

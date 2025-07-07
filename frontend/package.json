@@ -13,7 +13,8 @@
 		"test:unit": "vitest",
 		"test": "pnpm run test:unit -- --run",
 		"lint": "biome check --apply-unsafe .",
-		"format": "biome format --write ."
+		"format": "biome format --write .",
+		"tsc": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.2.6",
