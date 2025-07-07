@@ -47,7 +47,7 @@
     resetReading(); // Reset reading state
 
     try {
-      const response = await fetch('http://localhost:8000/extract-text', {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/extract-text`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@
     resetReading();
 
     try {
-      const response = await fetch('http://localhost:8000/tokenize', {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_BACKEND_URL}/tokenize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
