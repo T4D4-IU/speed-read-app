@@ -46,7 +46,7 @@ jobs:
         run: pnpm install
 
       - name: Run Biome Lint
-        run: pnpm run lint
+        run: pnpm run lint --no-fix
 
       - name: Run Vitest Unit Tests
         run: pnpm run test

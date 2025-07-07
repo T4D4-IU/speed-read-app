@@ -33,4 +33,4 @@ jobs:
         run: devbox run deno test
 
       - name: Run Deno Check
-        run: devbox run deno check main.ts
+        run: devbox run check-backend
