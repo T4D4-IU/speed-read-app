@@ -1,3 +1,6 @@
+[![Frontend CI](https://github.com/T4D4-IU/speed-read-app/actions/workflows/frontend.yml/badge.svg)](https://github.com/T4D4-IU/speed-read-app/actions/workflows/frontend.yml)
+[![Backend CI](https://github.com/T4D4-IU/speed-read-app/actions/workflows/backend.yml/badge.svg)](https://github.com/T4D4-IU/speed-read-app/actions/workflows/backend.yml)
+[![Built with Devbox](https://www.jetify.com/img/devbox/shield_galaxy.svg)](https://www.jetify.com/devbox/docs/contributor-quickstart/)
 ## This app is made by Gemini-CLI!!!!
 
 ## How to use
