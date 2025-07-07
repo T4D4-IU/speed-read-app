@@ -3,7 +3,7 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
-import { build, files, version } from '$app/environment';
+import { build, files, version } from '$service-worker';
 
 const ASSETS = `cache-${version}`;
 
@@ -12,7 +12,7 @@ const ASSETS = `cache-${version}`;
 const to_cache = build.concat(files);
 const static_assets = new Set(to_cache);
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (event: ExtendableEvent) => {
 	event.waitUntil(
 		caches
 			.open(ASSETS)
@@ -23,7 +23,7 @@ self.addEventListener('install', (event) => {
 	);
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', (event: ExtendableEvent) => {
 	event.waitUntil(
 		caches.keys().then(async (keys) => {
 			// delete old caches
@@ -37,7 +37,7 @@ self.addEventListener('activate', (event) => {
 	);
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', (event: FetchEvent) => {
 	if (event.request.method !== 'GET' || event.request.headers.has('range')) return;
 
 	const url = new URL(event.request.url);
